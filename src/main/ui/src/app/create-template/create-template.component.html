@@ -1,0 +1,43 @@
+<p-toast></p-toast>
+<div style="text-align: center; margin-top: 20px;">                
+    <br />      
+    
+    <div class="flex-container" style="margin-left: 20px; width: 45%;float: left;">
+        <div class="column" style="width: 30%; padding-top: 20px;">Title<span class="p-invalid">*</span></div>
+        <div class="column" style="width: 70%;">
+            <input required #templateTitle [(ngModel)]="templateModel.title" id="templateTitle" name="templateTitle" pInputText type="text"  placeholder="Please enter the Title" style="width: 90%;" />       
+        </div>
+    </div> 
+
+    <div class="flex-container" style="margin-left: 20px; width: 45%;float: left;">
+        <div class="column" style="width: 30%; padding-top: 20px;">Description<span class="p-invalid">*</span>  </div>
+        <div class="column" style="width: 70%;">
+            <input [(ngModel)]="templateModel.description" id="templateDescription" name="templateDescription" pInputText type="text" placeholder="Please enter the Description" style="width: 90%;" />       
+        </div>
+    </div>
+
+    <div class="flex-container" style="min-height: 10px;">
+        
+    </div>
+
+    <div class="flex-container" style="margin-left: 20px; width: 80%;float: left;">       
+        <div class="column" style="margin-left: 20%;">
+            <app-crud-offer-fields [(offerLetterFields)]="templateModel.fields"></app-crud-offer-fields>            
+        </div>
+    </div>
+
+    <div class="flex-container" style="min-height: 10px;">
+        
+    </div>
+
+    <div class="flex-container" style="margin-left: 20px; width: 100%;float: left;">       
+        <div class="column" style="margin-left: 20%;">         
+            <app-offer-template-editor [(content)]="templateModel.content"></app-offer-template-editor>  
+        </div>
+    </div>
+
+    <div>
+        <button pButton type="submit" label="Save" (click)="onSaveTemplate()"></button>
+    </div> 
+                                
+</div>

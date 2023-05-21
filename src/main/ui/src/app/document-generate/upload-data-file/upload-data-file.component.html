@@ -1,0 +1,31 @@
+<div class="stepsdemo-content" style="min-height: 450px;">
+    <p-card>
+        <ng-template pTemplate="title">
+            Step 1. Upload data file
+        </ng-template>
+        <ng-template pTemplate="subtitle">
+            You can upload .XLS/.XLSX data file
+        </ng-template>
+        <ng-template pTemplate="content">
+            <div class="p-fluid">
+                <div class="p-field">
+                    <label for="uploaddatafile">Upload data file</label>
+                    <p-fileUpload name="myfile[]" accept=".xls,.xlsx" customUpload="true" (uploadHandler)="onBasicUpload($event)"></p-fileUpload>
+                </div><br />        
+
+                <ng-container *ngIf="showSheetList">
+                    <div class="p-field">
+                        <label for="sheetName">Select sheet</label>
+                        <p-dropdown id="sheetName" [options]="workSheetNames" [(ngModel)]="selectedWorksheet" (ngModelChange)="onWorkSheetChange()" 
+                            optionLabel="name" placeholder="Select sheet of the uploaded excel file"></p-dropdown>
+                    </div><br />
+                </ng-container>               
+            </div>
+        </ng-template>
+        <ng-template pTemplate="footer">
+            <div class="p-grid p-nogutter p-justify-end">
+                <p-button label="Next" [disabled]="disableNext" (onClick)="nextPage()" icon="pi pi-angle-right" iconPos="right"></p-button>
+            </div>
+        </ng-template>
+    </p-card>
+</div>

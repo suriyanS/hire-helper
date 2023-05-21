@@ -1,0 +1,28 @@
+{
+	"data": [
+		{
+			"id": "1000",
+			"fieldCode": "employeeName",
+			"fieldName": "Employee Name",
+			"fieldValue": "Employee Name"			
+		},
+		{
+			"id": "1002",
+			"fieldCode": "employeeDesignation",
+			"fieldName": "Employee Designation",
+			"fieldValue": "Employee Designation"			
+		},
+		{
+			"id": "1003",
+			"fieldCode": "employeeDOB",
+			"fieldName": "Employee DOB",
+			"fieldValue": "Employee DOB"			
+		},
+		{
+			"id": "1004",
+			"fieldCode": "employeeSalary",
+			"fieldName": "Employee Salary",
+			"fieldValue": "Employee Salary"			
+		}
+    ]
+}

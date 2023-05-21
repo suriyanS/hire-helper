@@ -1,0 +1,36 @@
+<p-toast></p-toast>
+<div class="container" *ngIf="templateList && templateList.length > 0">
+    <div id="st-box" *ngFor="let template of templateList; index as i;">
+        <p-card header={{template.title}} subheader={{template.description}}
+            [style]="{'background-color': '#f8f9fa', 'width': '360px'}" styleClass="p-card-shadow">
+            <p-header>     
+            </p-header>     
+            <ng-template pTemplate="footer">
+                <p-button label="Preview" (click)="enablePreview(template)"></p-button>
+                <p-button label="Generate" (click)="enableGenerate(template)" styleClass="p-button-secondary" [style]="{'margin-left': '.5em'}"></p-button>
+                <button pButton pRipple icon="pi pi-trash" class="p-button-danger" (click)="deleteTemplate(template)" style ="margin-left: 10px"></button>
+            </ng-template>
+        </p-card>
+    </div>
+</div>
+<div class="container" *ngIf="templateList && templateList.length == 0">
+    <p>No Templates to view</p>
+</div>
+
+<p-dialog header={{previewTemplate.title}} [(visible)]="showPreview" [modal]="true" [style]="{width: '70vw'}"
+    [baseZIndex]="10000" [draggable]="false" [resizable]="true">    
+    <div style="height: 600px">
+        <ng2-pdfjs-viewer #pdfViewer></ng2-pdfjs-viewer>
+    </div>
+    
+    <ng-template pTemplate="footer">
+        <p-button icon="pi pi-check" (click)="showPreview=false" label="Ok" styleClass="p-button-text"></p-button>
+    </ng-template>
+</p-dialog>
+<p-dialog header="Document Generation" [(visible)]="showDocGeneration" [modal]="true" [style]="{width: '70vw'}"
+    [baseZIndex]="10000" [draggable]="false" [resizable]="true"> 
+    <app-upload-data-file [hidden]="currentScreen=='document'" [(templateModel)]="previewTemplate" (excelColumnHeaders)="onExcelHeaderGenerated($event)" (generatedData)="onDataGenerated($event)" (uploadFileBtnClick)="onNxtClick()"></app-upload-data-file>
+    <app-document-generation [hidden]="currentScreen=='upload'" [excelHeaders]="excelHeaders" (fileOutputFormatChange)="onFileOutputFormatChange($event)" (backBtnClick)="onBackClick()" (generateBtnClick)="onGenerateTemplate()"></app-document-generation>   
+  </p-dialog>
+
+<p-confirmDialog [style]="{width: '450px'}"></p-confirmDialog>

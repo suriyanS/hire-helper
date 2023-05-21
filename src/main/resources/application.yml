@@ -1,0 +1,7 @@
+welcome:
+  message: WELCOME TO JOB OFFER APP!!!
+
+spring:
+   data:
+     mongodb:
+           uri: mongodb://localhost:27017/localdb

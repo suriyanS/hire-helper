@@ -1,0 +1,36 @@
+<div class="stepsdemo-content">
+    <p-card>
+        <ng-template pTemplate="title">
+            Step 2. Document Generation
+        </ng-template>
+        <ng-template pTemplate="subtitle">
+            Generate document by providing name of the file and the format
+        </ng-template>
+        <ng-template pTemplate="content">
+            <div class="p-fluid p-formgrid p-grid">
+
+                <div class="p-field p-col-12 p-md-6">
+                    <label for="fileformat">File format <span class="p-invalid">*</span></label>
+                    <p-dropdown inputId="fileformat"  id="fileformatId" name="fileformatId" [(ngModel)]="selectedFileFormat" (ngModelChange)="onSelectedFormatChange()" [options]="fileformats" optionLabel="name" placeholder="Select a format"></p-dropdown>
+                </div><br/>
+
+                <div class="p-field p-col-12 p-md-6">
+                    <label for="filename">File name <span class="p-invalid">*</span></label>
+                    <input id="filename" [(ngModel)]="fileOutputFormat.fileName" type="text" pInputText placeholder="Enter the name of the generated file"/> 
+                </div><br/>
+
+                <div class="p-field p-col-12 p-md-6">
+                    <label for="filenameprefix">File name prefix</label>
+                    <p-dropdown inputId="filenameprefix" d="filenameprefixId" name="filenameprefixId" [(ngModel)]="selectedFilePrefix" (ngModelChange)="onSelectedPrefixChange()" [options]="excelHeaders" optionLabel="name" placeholder="Select the prefix for the generated each file"></p-dropdown>
+                </div><br/>               
+            </div>
+        </ng-template>
+        <ng-template pTemplate="footer">
+            <div class="p-grid p-nogutter p-justify-between">
+                <p-button label="Back" (onClick)="prevPage()" icon="pi pi-angle-left"></p-button>
+                <p-button label="Generate" (onClick)="generateDocument()" icon="pi pi-angle-right"
+                iconPos="right" [style]="{'float': 'right'}"></p-button>
+            </div>
+        </ng-template>
+    </p-card>
+</div>
