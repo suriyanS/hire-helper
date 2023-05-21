@@ -13,7 +13,7 @@ import * as FileSaver from 'file-saver';
   providers: [MessageService]
 })
 export class CreateTemplateComponent implements OnInit, AfterViewInit {
-  @ViewChild('templateTitle', {static: false}) templateTitle:ElementRef;
+  @ViewChild('templateTitle') templateTitle:ElementRef;
   @Input()
   templateModel: Template = new Template();
   templateList: Array<Template> = new Array<Template>();

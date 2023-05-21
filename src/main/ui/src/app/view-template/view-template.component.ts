@@ -13,7 +13,7 @@ import { saveAs } from 'file-saver';
   styleUrls: ['./view-template.component.scss'],
 })
 export class ViewTemplateComponent implements OnInit, AfterViewInit {
-  @ViewChild('pdfViewer', { static: false }) public pdfViewer;
+  @ViewChild('pdfViewer') public pdfViewer;
   templateList: Array<Template> = new Array<Template>();
 
   constructor(public templateService: TemplateService, private sanitizer: DomSanitizer, private confirmationService: ConfirmationService, private messageService: MessageService) { }
