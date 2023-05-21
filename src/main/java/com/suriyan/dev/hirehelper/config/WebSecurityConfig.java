@@ -1,4 +1,4 @@
-package com.aspiringminds.event.joboffer.config;
+package com.suriyan.dev.hirehelper.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

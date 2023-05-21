@@ -1,11 +1,11 @@
-package com.aspiringminds.event.joboffer.service;
+package com.suriyan.dev.hirehelper.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.mapping.event.AbstractMongoEventListener;
 import org.springframework.data.mongodb.core.mapping.event.BeforeConvertEvent;
 import org.springframework.stereotype.Component;
 
-import com.aspiringminds.event.joboffer.model.OfferLetterField;
+import com.suriyan.dev.hirehelper.model.OfferLetterField;
 
 @Component
 public class OfferLetterModelListener extends AbstractMongoEventListener<OfferLetterField> {

@@ -1,4 +1,4 @@
-package com.aspiringminds.event.joboffer.service;
+package com.suriyan.dev.hirehelper.service;
 
 import java.util.List;
 import java.util.Optional;
@@ -9,8 +9,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.aspiringminds.event.joboffer.model.OfferLetterField;
-import com.aspiringminds.event.joboffer.repository.OfferLetterFieldRepository;
+import com.suriyan.dev.hirehelper.model.OfferLetterField;
+import com.suriyan.dev.hirehelper.repository.OfferLetterFieldRepository;
 
 @Service
 public class OfferLetterFieldService {

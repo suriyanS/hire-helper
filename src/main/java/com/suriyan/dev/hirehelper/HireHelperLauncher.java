@@ -1,4 +1,4 @@
-package com.aspiringminds.event.joboffer;
+package com.suriyan.dev.hirehelper;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -12,19 +12,19 @@ import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 @SpringBootApplication
-@ComponentScan(basePackages={"com.aspiringminds.event.joboffer"})
+@ComponentScan(basePackages = { "com.suriyan.dev.hirehelper" })
 @CrossOrigin("*")
 @EnableSwagger2
-public class JobOfferLauncher {
+public class HireHelperLauncher {
 
-    public static void main(String[] args) {
-        SpringApplication.run(JobOfferLauncher.class, args);
-    }
-    
-    @Bean
-    public Docket postApi() {
-      return new Docket(DocumentationType.SWAGGER_2).select()
-    	 .apis(RequestHandlerSelectors.basePackage("com.aspiringminds.event.joboffer")).build();
-    }
+	public static void main(String[] args) {
+		SpringApplication.run(HireHelperLauncher.class, args);
+	}
+
+	@Bean
+	public Docket postApi() {
+		return new Docket(DocumentationType.SWAGGER_2).select()
+				.apis(RequestHandlerSelectors.basePackage("com.suriyan.dev.hirehelper")).build();
+	}
 
 }

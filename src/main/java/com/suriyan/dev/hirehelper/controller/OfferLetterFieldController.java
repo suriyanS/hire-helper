@@ -1,4 +1,4 @@
-package com.aspiringminds.event.joboffer.controller;
+package com.suriyan.dev.hirehelper.controller;
 
 import java.util.List;
 
@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.aspiringminds.event.joboffer.model.OfferLetterField;
-import com.aspiringminds.event.joboffer.service.OfferLetterFieldService;
+import com.suriyan.dev.hirehelper.model.OfferLetterField;
+import com.suriyan.dev.hirehelper.service.OfferLetterFieldService;
 
 @RestController
 public class OfferLetterFieldController {

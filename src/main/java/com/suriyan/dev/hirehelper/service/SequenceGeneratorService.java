@@ -1,4 +1,4 @@
-package com.aspiringminds.event.joboffer.service;
+package com.suriyan.dev.hirehelper.service;
 
 import java.util.Objects;
 
@@ -7,7 +7,7 @@ import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 
-import com.aspiringminds.event.joboffer.model.DatabaseSequence;
+import com.suriyan.dev.hirehelper.model.DatabaseSequence;
 
 import static org.springframework.data.mongodb.core.FindAndModifyOptions.options;
 import static org.springframework.data.mongodb.core.query.Criteria.where;

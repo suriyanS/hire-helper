@@ -1,4 +1,4 @@
-package com.aspiringminds.event.joboffer.service;
+package com.suriyan.dev.hirehelper.service;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;

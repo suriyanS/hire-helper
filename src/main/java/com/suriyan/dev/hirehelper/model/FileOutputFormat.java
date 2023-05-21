@@ -1,4 +1,4 @@
-package com.aspiringminds.event.joboffer.model;
+package com.suriyan.dev.hirehelper.model;
 
 import java.util.List;
 

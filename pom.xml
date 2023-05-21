@@ -4,8 +4,8 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>com.aspiringminds.event.joboffer</groupId>
-	<artifactId>job-offer-app</artifactId>
+	<groupId>com.suriyan.dev.hirehelper</groupId>
+	<artifactId>hire-helper</artifactId>
 	<version>1.0-SNAPSHOT</version>
 
 	<properties>
@@ -30,7 +30,8 @@
 			<artifactId>spring-boot-devtools</artifactId>
 			<scope>runtime</scope>
 		</dependency>
-		<!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-data-mongodb -->
+		<!--
+		https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-data-mongodb -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-mongodb</artifactId>
@@ -83,25 +84,25 @@
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-lang3</artifactId>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>io.springfox</groupId>
 			<artifactId>springfox-swagger2</artifactId>
 			<version>3.0.0</version>
-		</dependency>		
-		
+		</dependency>
+
 		<dependency>
 			<groupId>io.springfox</groupId>
 			<artifactId>springfox-swagger-ui</artifactId>
-			 <version>3.0.0</version>
-		</dependency>	
-		
+			<version>3.0.0</version>
+		</dependency>
+
 		<dependency>
 			<groupId>org.springdoc</groupId>
 			<artifactId>springdoc-openapi-ui</artifactId>
 			<version>1.5.2</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>com.google.guava</groupId>
 			<artifactId>guava</artifactId>
@@ -138,7 +139,7 @@
 				<artifactId>exec-maven-plugin</artifactId>
 				<version>1.6.0</version>
 				<executions>
-					<!-- <execution>
+			<!--		<execution>
 						<id>npm-ng-build</id>
 						<phase>generate-resources</phase>
 						<goals>
@@ -153,7 +154,7 @@
 								<argument>build</argument>
 							</arguments>
 						</configuration>
-					</execution> -->
+					</execution>-->
 				</executions>
 			</plugin>
 			<plugin>

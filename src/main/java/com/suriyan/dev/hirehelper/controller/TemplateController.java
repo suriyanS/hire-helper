@@ -1,4 +1,4 @@
-package com.aspiringminds.event.joboffer.controller;
+package com.suriyan.dev.hirehelper.controller;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -23,11 +23,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.aspiringminds.event.joboffer.model.FileOutputFormat;
-import com.aspiringminds.event.joboffer.model.Template;
-import com.aspiringminds.event.joboffer.service.TemplateService;
 import com.itextpdf.html2pdf.ConverterProperties;
 import com.itextpdf.html2pdf.HtmlConverter;
+import com.suriyan.dev.hirehelper.model.FileOutputFormat;
+import com.suriyan.dev.hirehelper.model.Template;
+import com.suriyan.dev.hirehelper.service.TemplateService;
 
 @RestController
 public class TemplateController {

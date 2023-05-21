@@ -1,4 +1,4 @@
-package com.aspiringminds.event.joboffer.service;
+package com.suriyan.dev.hirehelper.service;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -14,12 +14,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.aspiringminds.event.joboffer.model.Template;
-import com.aspiringminds.event.joboffer.repository.TemplateRepository;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.pdf.PdfWriter;
 import com.itextpdf.tool.xml.XMLWorkerHelper;
+import com.suriyan.dev.hirehelper.model.Template;
+import com.suriyan.dev.hirehelper.repository.TemplateRepository;
 
 @Service
 public class TemplateService {
