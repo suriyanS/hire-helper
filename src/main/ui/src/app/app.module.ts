@@ -6,6 +6,7 @@ import { HttpClientModule } from "@angular/common/http";
 import { WelcomeModule } from './welcome/welcome.module';
 import { PrimeNGConfig } from 'primeng/api';
 import { SharedModule } from './shared.module';
+import { SharedService } from './shared.service';
 
 @NgModule({
   declarations: [
@@ -18,7 +19,8 @@ import { SharedModule } from './shared.module';
     WelcomeModule
   ],
   providers: [
-    PrimeNGConfig
+    PrimeNGConfig,
+    SharedService
   ],
   bootstrap: [
     AppComponent

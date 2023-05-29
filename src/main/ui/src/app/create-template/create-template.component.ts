@@ -1,10 +1,12 @@
-import { AfterViewInit, Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Template } from '../model/Template';
 import { TemplateService } from './create-template-service';
-import { finalize } from 'rxjs/operators';
+import { finalize, takeUntil } from 'rxjs/operators';
 import { MessageService } from 'primeng/api';
-import { saveAs } from 'file-saver';
-import * as FileSaver from 'file-saver';
+import { OfferLetterField } from '../model/dropdown.model';
+import { ActivatedRoute } from '@angular/router';
+import { SharedService } from '../shared.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-create-template',
@@ -12,20 +14,31 @@ import * as FileSaver from 'file-saver';
   styleUrls: ['./create-template.component.scss'],
   providers: [MessageService]
 })
-export class CreateTemplateComponent implements OnInit, AfterViewInit {
-  @ViewChild('templateTitle') templateTitle:ElementRef;
+export class CreateTemplateComponent implements OnInit, AfterViewInit, OnDestroy {
+  @ViewChild('templateTitle') templateTitle: ElementRef;
   @Input()
   templateModel: Template = new Template();
   templateList: Array<Template> = new Array<Template>();
-  constructor(public templateService: TemplateService, private messageService: MessageService) { }
+  selectedField: string;
+  editMode: boolean;
+  dataSubscription: Subscription;
+  constructor(public templateService: TemplateService, private messageService: MessageService,
+    private route: ActivatedRoute, private sharedService: SharedService) { }
 
-  ngOnInit() {
-    // document.getElementById("templateTitle").focus();
+  ngOnInit(): void {
+    this.dataSubscription = this.route.data.subscribe(data => {
+      this.editMode = data.editMode;
+      if (this.editMode) {
+        this.templateModel = this.sharedService.getSharedData();
+      } else {
+        this.templateModel = new Template();
+      }
+    });
   }
 
   ngAfterViewInit() {
     this.templateTitle.nativeElement.focus()
-}
+  }
 
   onSaveTemplate() {
     let obj = this;
@@ -33,7 +46,7 @@ export class CreateTemplateComponent implements OnInit, AfterViewInit {
       return;
     }
     this.templateService.saveTemplate(obj.templateModel).pipe(finalize(() => { })
-    ).subscribe((result: Template) => {   
+    ).subscribe((result: Template) => {
       this.templateModel = new Template();
       this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Template Saved Successfully!', life: 3000 });
     },
@@ -46,7 +59,7 @@ export class CreateTemplateComponent implements OnInit, AfterViewInit {
 
   getAllTemplates() {
     let obj = this;
-    this.templateService.getAllTemplates().pipe(finalize(() => { })
+    this.templateService.getAllTemplates().pipe(takeUntil(this),finalize(() => { })
     ).subscribe(result => {
       obj.templateList = result;
 
@@ -57,4 +70,47 @@ export class CreateTemplateComponent implements OnInit, AfterViewInit {
     )
   }
 
+  onContentChange(template: string) {
+    const regex = /{([^}]+)}/g;
+    this.templateModel.fields = new Array<OfferLetterField>();
+    const match = template?.match(regex)?.map(value => value = value.replace(/[{}]/g, "")) || [];
+    if (match.length > 0) {
+      for (let index in match) {
+        let field = new OfferLetterField();
+        const extractedField = match[index];
+        field.fieldName = extractedField;
+        const existingFields = this.templateModel.fields.filter(field => field.fieldName == extractedField);
+        if (existingFields.length == 0)
+          this.templateModel.fields.push(field);
+      }
+    }
+  }
+
+  onFieldSelect(field: OfferLetterField) {
+    console.log(field.fieldName);
+    this.templateModel.content = this.appendValueToHTML("{" + field.fieldName + "}", this.templateModel.content);
+  }
+
+  private appendValueToHTML(value, htmlString): string {
+    // Create a temporary element to hold the HTML string
+    const tempElement = document.createElement("div");
+    tempElement.innerHTML = htmlString;
+
+    // Find the <p> tag within the temporary element
+    const paragraph = tempElement.querySelector("p");
+
+    // Append the value inside the <p> tag
+    paragraph.innerHTML += value;
+
+    // Return the updated HTML string
+    return tempElement.innerHTML;
+  }
+
+  ngOnDestroy() {
+    if (this.dataSubscription) {
+      this.dataSubscription.unsubscribe();
+    }
+  }
 }
+
+

@@ -6,8 +6,9 @@
             <p-header>     
             </p-header>     
             <ng-template pTemplate="footer">
-                <p-button label="Preview" (click)="enablePreview(template)"></p-button>
-                <p-button label="Generate" (click)="enableGenerate(template)" styleClass="p-button-secondary" [style]="{'margin-left': '.5em'}"></p-button>
+                <p-button label="Edit" (click)="editDocument(template)"></p-button>
+                <p-button label="Preview" (click)="enablePreview(template)" styleClass="p-button-secondary" [style]="{'margin-left': '.5em'}"></p-button>
+                <p-button label="Generate" (click)="enableGenerate(template)" styleClass="p-button-success" [style]="{'margin-left': '.5em'}"></p-button>
                 <button pButton pRipple icon="pi pi-trash" class="p-button-danger" (click)="deleteTemplate(template)" style ="margin-left: 10px"></button>
             </ng-template>
         </p-card>

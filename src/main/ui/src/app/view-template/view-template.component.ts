@@ -6,6 +6,8 @@ import { TemplateService } from '../create-template/create-template-service';
 import { DropDownModel, FileOutputFormat } from '../model/dropdown.model';
 import { Template } from '../model/Template';
 import { saveAs } from 'file-saver';
+import { Router } from '@angular/router';
+import { SharedService } from '../shared.service';
 
 @Component({
   selector: 'app-view-template',
@@ -16,7 +18,9 @@ export class ViewTemplateComponent implements OnInit, AfterViewInit {
   @ViewChild('pdfViewer') public pdfViewer;
   templateList: Array<Template> = new Array<Template>();
 
-  constructor(public templateService: TemplateService, private sanitizer: DomSanitizer, private confirmationService: ConfirmationService, private messageService: MessageService) { }
+  constructor(public templateService: TemplateService, private sanitizer: DomSanitizer,
+    private confirmationService: ConfirmationService, private messageService: MessageService,
+    private router: Router, private sharedService: SharedService) { }
   showPreview = false;
   showDocGeneration = false;
   showPreDocGeneration = false;
@@ -62,6 +66,11 @@ export class ViewTemplateComponent implements OnInit, AfterViewInit {
     this.generatePreviewDocument(template.content);
   }
 
+  editDocument(template: Template) {
+    this.sharedService.setSharedData(template);
+    this.router.navigateByUrl('/edit-template');
+  }
+
   enableGenerate(template: Template) {
     this.showDocGeneration = true;
     this.previewTemplate = template;
@@ -94,8 +103,8 @@ export class ViewTemplateComponent implements OnInit, AfterViewInit {
 
 
 
-  generateDocument(exportData: Array<FileOutputFormat>) {   
-    this.templateService.getPdf(exportData).subscribe(
+  generateDocument(exportData: Array<FileOutputFormat>) {
+    this.templateService.generatePDFZip(exportData).subscribe(
       (response) => {
         let blob = new Blob([response]);
         let filename = this.fileOutputFormat.fileName + '.zip';
@@ -104,7 +113,7 @@ export class ViewTemplateComponent implements OnInit, AfterViewInit {
   }
 
   generatePreviewDocument(html: string) {
-    this.templateService.getPdfView(html).subscribe(
+    this.templateService.generatePDF(html).subscribe(
       (response) => {
         this.pdfViewer.pdfSrc = response;
         this.pdfViewer.refresh();
@@ -130,7 +139,5 @@ export class ViewTemplateComponent implements OnInit, AfterViewInit {
       }
     });
   }
-
-
 
 }

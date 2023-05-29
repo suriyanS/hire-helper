@@ -1,84 +1,64 @@
 <div class="content-section implementation">
     <p-toast></p-toast>
-
     <div class="card">
-        <p-toolbar styleClass="p-mb-4">
-            <ng-template pTemplate="left">
-                <button pButton pRipple label="New" icon="pi pi-plus" class="p-button-success p-mr-2" (click)="openNew()"></button>
-                <button pButton pRipple label="Delete" icon="pi pi-trash" class="p-button-danger" (click)="deleteSelectedOfferfields()" ></button>
-            </ng-template>
-
-            <!-- [disabled]="!selectedOfferfields || !selectedOfferfields.length" -->
-    
-            <!-- <ng-template pTemplate="right">
-                <p-fileUpload mode="basic" accept="image/*" maxFileSize="1000000" label="Import" chooseLabel="Import" class="p-mr-2 p-d-inline-block"></p-fileUpload>
-                <button pButton pRipple label="Export" icon="pi pi-upload" class="p-button-help"></button>
-            </ng-template> -->
-        </p-toolbar>
-    
-        <p-table #dt [value]="offerLetterFields" [rows]="10" [paginator]="true" [(selection)]="selectedOfferfields" [rowHover]="true"
-         dataKey="id" currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [showCurrentPageReport]="true">
-            <ng-template pTemplate="caption">
-                <div class="p-d-flex p-ai-center p-jc-between">
-                    <h5 class="p-m-0">Manage Fields</h5>
-                    <!-- <span class="p-input-icon-left">
-                        <i class="pi pi-search"></i>
-                        <input pInputText type="text" (input)="dt.filterGlobal($event.target.value, 'contains')" placeholder="Search..." />
-                    </span> -->
-                </div>
-            </ng-template>
+        <p-table #dt [value]="offerLetterFields" [rows]="10" [paginator]="true" [(selection)]="selectedOfferfields"
+            [rowHover]="true" dataKey="id"
+            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+            [showCurrentPageReport]="true" styleClass="p-datatable-gridlines">
             <ng-template pTemplate="header">
                 <tr>
-                    <th style="width: 3rem">
-                        <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
-                    </th>
-                    <th pSortableColumn="fieldCode">Serial No <p-sortIcon field="sNo"></p-sortIcon></th>
+                    <th pSortableColumn="fieldCode">Field Id <p-sortIcon field="sNo"></p-sortIcon></th>
                     <th pSortableColumn="fieldName">Field Name <p-sortIcon field="fieldName"></p-sortIcon></th>
-                    <th pSortableColumn="fieldValue">Field Value <p-sortIcon field="fieldValue"></p-sortIcon></th>                    
-                    <th></th>
+                    <!-- <th pSortableColumn="fieldValue">Field Value <p-sortIcon field="fieldValue"></p-sortIcon></th> -->
+                    <!-- <th></th> -->
                 </tr>
             </ng-template>
             <ng-template pTemplate="body" let-offerLetterField let-i="rowIndex">
                 <tr>
-                    <td>
-                        <p-tableCheckbox [value]="offerLetterField"></p-tableCheckbox>
-                    </td>
                     <td style="text-align: center;">{{i+1}}</td>
                     <td>{{offerLetterField.fieldName}}</td>
-                    <td>{{offerLetterField.fieldValue}}</td>                    
-                    <td>
-                        <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success p-mr-2" (click)="editOfferfield(offerLetterField)"></button>
-                        <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning" (click)="deleteOfferfield(offerLetterField)"></button>
-                    </td>
+                    <td>{{offerLetterField.fieldValue}}</td>
+                    <!-- <td>
+                        <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success p-mr-2"
+                            (click)="editOfferfield(offerLetterField)"></button>
+                        <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning"
+                            (click)="deleteOfferfield(offerLetterField)"></button>
+                    </td> -->
                 </tr>
             </ng-template>
             <ng-template pTemplate="summary">
                 <div class="p-d-flex p-ai-center p-jc-between">
-                    In total there are {{offerLetterFields ? offerLetterFields.length : 0 }} Offerfields.
+                    In total there are {{offerLetterFields ? offerLetterFields.length : 0 }} dynamic fields.
                 </div>
             </ng-template>
         </p-table>
     </div>
-
-    <p-dialog [(visible)]="offerfieldsDialog" [style]="{width: '500px'}" header="Offerfield Details" [modal]="true" styleClass="p-fluid">
-        <ng-template pTemplate="content">            
+</div>
+<div class="card">
+    <p-dialog [(visible)]="offerfieldsDialog" [style]="{width: '500px'}" header="Offerfield Details" [modal]="true"
+        styleClass="p-fluid">
+        <ng-template pTemplate="content">
             <!-- <div class="p-field">
                 <label for="name">Field Code</label>
                 <input [(ngModel)]="offerfield.fieldCode" id="fieldCode" name="fieldCode" type="text" pInputText id="fieldCode" />             
             </div> -->
             <div class="p-field">
                 <label for="name">Field Name <span class="p-invalid">*</span></label>
-                <input [(ngModel)]="offerfield.fieldName" [disabled]= "editMode" id="fieldName" name="fieldName" type="text" pInputText id="fieldName" />
-            </div><br/>
+                <input [(ngModel)]="offerfield.fieldName" [disabled]="editMode" id="fieldName" name="fieldName"
+                    type="text" pInputText id="fieldName" />
+            </div><br />
             <div class="p-field">
                 <label for="name">Field Value</label>
-                <input [(ngModel)]="offerfield.fieldValue" id="fieldValue" name="fieldValue" type="text" pInputText id="fieldValue" />
+                <input [(ngModel)]="offerfield.fieldValue" id="fieldValue" name="fieldValue" type="text" pInputText
+                    id="fieldValue" />
             </div>
         </ng-template>
-        
+
         <ng-template pTemplate="footer">
-            <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-text" (click)="hideDialog()"></button>
-            <button pButton pRipple label="Save" icon="pi pi-check" class="p-button-text" (click)="saveOfferfield()"></button>
+            <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-text"
+                (click)="hideDialog()"></button>
+            <button pButton pRipple label="Save" icon="pi pi-check" class="p-button-text"
+                (click)="saveOfferfield()"></button>
         </ng-template>
     </p-dialog>
 

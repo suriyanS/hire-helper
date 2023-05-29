@@ -13,7 +13,9 @@ const routes: Routes = [
 
   { path: '', redirectTo: '/create-template', pathMatch: 'full' },
 
-  { path: 'create-template', component: CreateTemplateComponent },
+  { path: 'create-template', component: CreateTemplateComponent, data: { editMode: false } },
+
+  { path: 'edit-template', component: CreateTemplateComponent, data: { editMode: true } },
 
   { path: 'view-template', component: ViewTemplateComponent },
 
@@ -22,19 +24,19 @@ const routes: Routes = [
 
     children: [
 
-        { path: '', redirectTo: 'upload-data-file', pathMatch: 'full' },
+      { path: '', redirectTo: 'upload-data-file', pathMatch: 'full' },
 
-        { path: 'upload-data-file', component: UploadDataFileComponent },
+      { path: 'upload-data-file', component: UploadDataFileComponent },
 
-        { path: 'field-mapping', component: FieldMappingComponent },
+      { path: 'field-mapping', component: FieldMappingComponent },
 
-        { path: 'document-generation', component: DocumentGenerationComponent }
+      { path: 'document-generation', component: DocumentGenerationComponent }
     ]
   }
-];  
+];
 
 @NgModule({
-      imports: [RouterModule.forRoot(routes, {useHash: true})],
-      exports: [RouterModule]
-    })
+  imports: [RouterModule.forRoot(routes, { useHash: true })],
+  exports: [RouterModule]
+})
 export class AppRoutingModule { }

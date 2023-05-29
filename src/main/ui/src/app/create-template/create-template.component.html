@@ -1,43 +1,69 @@
 <p-toast></p-toast>
-<div style="text-align: center; margin-top: 20px;">                
-    <br />      
-    
+<div style="text-align: center; margin-top: 20px;">
+    <br />
+
     <div class="flex-container" style="margin-left: 20px; width: 45%;float: left;">
         <div class="column" style="width: 30%; padding-top: 20px;">Title<span class="p-invalid">*</span></div>
         <div class="column" style="width: 70%;">
-            <input required #templateTitle [(ngModel)]="templateModel.title" id="templateTitle" name="templateTitle" pInputText type="text"  placeholder="Please enter the Title" style="width: 90%;" />       
+            <input required #templateTitle [disabled]="editMode" [(ngModel)]="templateModel.title" id="templateTitle" name="templateTitle"
+                pInputText type="text" placeholder="Please enter the Title" style="width: 90%;" />
         </div>
-    </div> 
+    </div>
 
     <div class="flex-container" style="margin-left: 20px; width: 45%;float: left;">
-        <div class="column" style="width: 30%; padding-top: 20px;">Description<span class="p-invalid">*</span>  </div>
+        <div class="column" style="width: 30%; padding-top: 20px;">Description<span class="p-invalid">*</span> </div>
         <div class="column" style="width: 70%;">
-            <input [(ngModel)]="templateModel.description" id="templateDescription" name="templateDescription" pInputText type="text" placeholder="Please enter the Description" style="width: 90%;" />       
+            <input [disabled]="editMode" [(ngModel)]="templateModel.description" id="templateDescription" name="templateDescription"
+                pInputText type="text" placeholder="Please enter the Description" style="width: 90%;" />
         </div>
     </div>
 
     <div class="flex-container" style="min-height: 10px;">
-        
+
     </div>
 
-    <div class="flex-container" style="margin-left: 20px; width: 80%;float: left;">       
-        <div class="column" style="margin-left: 20%;">
-            <app-crud-offer-fields [(offerLetterFields)]="templateModel.fields"></app-crud-offer-fields>            
-        </div>
-    </div>
+
 
     <div class="flex-container" style="min-height: 10px;">
-        
+
     </div>
 
-    <div class="flex-container" style="margin-left: 20px; width: 100%;float: left;">       
-        <div class="column" style="margin-left: 20%;">         
-            <app-offer-template-editor [(content)]="templateModel.content"></app-offer-template-editor>  
+
+    <!-- <div class="card flex justify-content-center">
+        <p-card>
+            <p class="m-0">
+                Please note that the data on this page is populated dynamically using the template content. To include
+                dynamic fields, simply enclose them within a pair of single curly braces. For example, you can use the
+                format {{'{name}'}} to represent a dynamic field.
+            </p>
+        </p-card>
+    </div> -->
+
+    <div class="flex-container" style="margin-left: 20px; width: 100%;float: left;">
+        <div class="column">
+            <app-offer-template-editor [(content)]="templateModel.content" (contentChange)="onContentChange($event)">
+            </app-offer-template-editor>
+            <div>
+                <button pButton type="submit" label="Save" (click)="onSaveTemplate()"></button>
+            </div>
+        </div>
+        <div class="column">
+            <h3 style="font-family: Arial, sans-serif;">Template Variables</h3>
+            <div class="card flex justify-content-center">
+                <p-listbox [(ngModel)]="selectedField" (onClick)="onFieldSelect($event.value)"
+                    [options]="templateModel.fields" optionLabel="fieldName" [listStyle]="{ 'max-height': '250px' }"
+                    [style]="{ width: '15rem' }">
+                    <ng-template let-field pTemplate="item">
+                        <div class="flex align-items-center gap-2">
+                            <div>{{ field.fieldName }}</div>
+                        </div>
+                    </ng-template>
+                </p-listbox>
+            </div>
+            <!-- <app-crud-offer-fields [(offerLetterFields)]="templateModel.fields"></app-crud-offer-fields> -->
         </div>
     </div>
 
-    <div>
-        <button pButton type="submit" label="Save" (click)="onSaveTemplate()"></button>
-    </div> 
-                                
+
+
 </div>
