@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Template } from '../model/Template';
 import { TemplateService } from './create-template-service';
-import { finalize, takeUntil } from 'rxjs/operators';
+import { finalize } from 'rxjs/operators';
 import { MessageService } from 'primeng/api';
 import { OfferLetterField } from '../model/dropdown.model';
 import { ActivatedRoute } from '@angular/router';
@@ -59,7 +59,7 @@ export class CreateTemplateComponent implements OnInit, AfterViewInit, OnDestroy
 
   getAllTemplates() {
     let obj = this;
-    this.templateService.getAllTemplates().pipe(takeUntil(this),finalize(() => { })
+    this.templateService.getAllTemplates().pipe(finalize(() => { })
     ).subscribe(result => {
       obj.templateList = result;
 
