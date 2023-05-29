@@ -11,11 +11,11 @@ export class TemplateService {
 
     }
     getAllTemplates(): Observable<Array<Template>> {
-        return this.http.get<Array<Template>>('/all-templates');
-    }    
+        return this.http.get<Array<Template>>('/templates');
+    }
 
     downloadFile(data): any {
-        const REQUEST_PARAMS = new HttpParams().set('fileName',data.filename);
+        const REQUEST_PARAMS = new HttpParams().set('fileName', data.filename);
         const REDQUEST_URI = '/download';
         return this.http.post(REDQUEST_URI, {
             params: REQUEST_PARAMS,
@@ -23,25 +23,27 @@ export class TemplateService {
         });
     }
 
-    getPdf(data): any{
-        return this.http.post('/getpdf',data, { headers: new HttpHeaders({          
-            'Content-Type': 'application/json',
-          }), responseType: 'blob'});
+    generatePDFZip(data): any {
+        return this.http.post('/templates/pdf/zip', data, {
+            headers: new HttpHeaders({
+                'Content-Type': 'application/json',
+            }), responseType: 'blob'
+        });
     }
 
-    getPdfView(data): any{
-        return this.http.post('/getpdfview',data, { headers: new HttpHeaders({          
-            'Content-Type': 'application/json',
-          }), responseType: 'blob'});
+    generatePDF(data): any {
+        return this.http.post('/templates/pdf', data, {
+            headers: new HttpHeaders({
+                'Content-Type': 'application/json',
+            }), responseType: 'blob'
+        });
     }
 
     saveTemplate(template: Template): Observable<any> {
-        return this.http.post('/create-template',template);
+        return this.http.post('/templates', template);
     }
 
-    deleteTemplate(id): Observable<any> {
-        let params = new HttpParams();
-        params.append('id', id);
-        return this.http.post('/delete-template',id);
+    deleteTemplate(id: number): Observable<any> {
+        return this.http.delete(`/templates/${id}`);
     }
 }

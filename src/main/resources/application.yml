@@ -4,4 +4,4 @@ welcome:
 spring:
    data:
      mongodb:
-           uri: mongodb://localhost:27017/localdb
+           uri: mongodb://localhost:27017/training-db
