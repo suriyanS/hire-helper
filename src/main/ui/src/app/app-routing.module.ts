@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { AppComponent } from './app.component';
 import { CreateTemplateComponent } from './create-template/create-template.component';
 import { DocumentGenerateComponent } from './document-generate/document-generate.component';
 import { DocumentGenerationComponent } from './document-generate/document-generation/document-generation.component';

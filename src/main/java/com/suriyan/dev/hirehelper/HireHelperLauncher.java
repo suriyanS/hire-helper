@@ -2,6 +2,7 @@ package com.suriyan.dev.hirehelper;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.context.ApplicationPidFileWriter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -18,7 +19,9 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 public class HireHelperLauncher {
 
 	public static void main(String[] args) {
-		SpringApplication.run(HireHelperLauncher.class, args);
+		SpringApplication springApplication = new SpringApplication(HireHelperLauncher.class);
+		springApplication.addListeners(new ApplicationPidFileWriter("application.pid"));
+		springApplication.run(args);
 	}
 
 	@Bean

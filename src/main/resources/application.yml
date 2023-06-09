@@ -1,7 +1,13 @@
 welcome:
-  message: WELCOME TO JOB OFFER APP!!!
+  message: WELCOME TO HIRE HELPER APP!!!
 
 spring:
+   application:
+    name: hire-helper
    data:
      mongodb:
            uri: mongodb://localhost:27017/training-db
+server:
+  port: 8080
+  
+
