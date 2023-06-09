@@ -1,15 +1,17 @@
 package com.suriyan.dev.hirehelper.controller;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
-import javax.servlet.http.HttpServletResponse;
-
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -19,12 +21,15 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.xhtmlrenderer.pdf.ITextRenderer;
 
 import com.itextpdf.html2pdf.ConverterProperties;
 import com.itextpdf.html2pdf.HtmlConverter;
+import com.lowagie.text.DocumentException;
 import com.suriyan.dev.hirehelper.model.FileOutputFormat;
 import com.suriyan.dev.hirehelper.model.Template;
 import com.suriyan.dev.hirehelper.service.TemplateService;
@@ -45,6 +50,12 @@ public class TemplateController {
 	@PostMapping(consumes = "application/json")
 	public ResponseEntity<Template> createTemplate(@RequestBody Template template) {
 		Template templateObj = service.createTemplate(template);
+		return ResponseEntity.ok(templateObj);
+	}
+
+	@PutMapping(consumes = "application/json")
+	public ResponseEntity<Template> updateTemplate(@RequestBody Template template) {
+		Template templateObj = service.updateTemplate(template);
 		return ResponseEntity.ok(templateObj);
 	}
 
@@ -82,20 +93,72 @@ public class TemplateController {
 	}
 
 	@PostMapping("/pdf/zip")
-	public ResponseEntity<byte[]> generatePDFZip(@RequestBody List<FileOutputFormat> outputFormat,
-			HttpServletResponse response) throws IOException {
-
-		HashMap<String, byte[]> mapHtmlData = new HashMap<String, byte[]>();
+	public ResponseEntity<byte[]> generatePDFZip(@RequestBody List<FileOutputFormat> outputFormat) throws IOException {
+		HashMap<String, byte[]> mapHtmlData = new HashMap<>();
 
 		for (FileOutputFormat format : outputFormat) {
 			byte[] contents = convertListOfBytesToPDF(format.getFileData());
 			mapHtmlData.put(format.getUniqueFileName(), contents);
 		}
-		byte[] zippedContent = convertListOfBytesToZip(mapHtmlData);
-		response.setContentType("application/zip");
-		response.setStatus(HttpServletResponse.SC_OK);
-		response.addHeader("Content-Disposition", "attachment; filename=\"output.zip\"");
-		return new ResponseEntity<>(zippedContent, HttpStatus.OK);
+
+		if (mapHtmlData.size() > 1) {
+			byte[] zippedContent = convertListOfBytesToZip(mapHtmlData);
+
+			HttpHeaders headers = new HttpHeaders();
+			headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+			headers.setContentDispositionFormData("attachment", "output.zip");
+
+			return ResponseEntity.ok().headers(headers).body(zippedContent);
+		}
+
+		String filename = mapHtmlData.keySet().iterator().next();
+		byte[] pdfContent = mapHtmlData.get(filename);
+
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_PDF);
+		headers.setContentDispositionFormData("attachment", filename + ".pdf");
+
+		return ResponseEntity.ok().headers(headers).body(pdfContent);
+	}
+
+	@PostMapping("/doc/zip")
+	public ResponseEntity<byte[]> generateDocZip(@RequestBody List<FileOutputFormat> outputFormat) throws IOException {
+		HashMap<String, byte[]> mapHtmlData = new HashMap<>();
+
+		for (FileOutputFormat format : outputFormat) {
+			byte[] contents;
+			try {
+				contents = convertListOfBytesToDOCX(format.getFileData());
+				mapHtmlData.put(format.getUniqueFileName(), contents);
+
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (DocumentException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+		}
+
+		if (mapHtmlData.size() > 1) {
+			byte[] zippedContent = convertListOfBytesToZip(mapHtmlData);
+
+			HttpHeaders headers = new HttpHeaders();
+			headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+			headers.setContentDispositionFormData("attachment", "output.zip");
+
+			return ResponseEntity.ok().headers(headers).body(zippedContent);
+		}
+
+		String filename = mapHtmlData.keySet().iterator().next();
+		byte[] docxContent = mapHtmlData.get(filename);
+
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+		headers.setContentDispositionFormData("attachment", filename + ".docx");
+
+		return ResponseEntity.ok().headers(headers).body(docxContent);
 	}
 
 	private byte[] convertListOfBytesToPDF(String html) throws IOException {
@@ -104,6 +167,33 @@ public class TemplateController {
 		converterProperties.setBaseUri("http://localhost:8080");
 		HtmlConverter.convertToPdf(html, target, converterProperties);
 		return target.toByteArray();
+	}
+
+	private byte[] convertListOfBytesToDOCX(String html) throws IOException, DocumentException {
+		// Convert HTML to PDF using Flying Saucer
+		byte[] pdfBytes = convertListOfBytesToPDF(html);
+
+		// Convert PDF to DOCX using Apache PDFBox and Apache POI
+		try (InputStream pdfInputStream = new ByteArrayInputStream(pdfBytes)) {
+			PDDocument pdDocument = PDDocument.load(pdfInputStream);
+			XWPFDocument document = new XWPFDocument();
+			// Iterate through each page of the PDF
+			for (int i = 0; i < pdDocument.getNumberOfPages(); i++) {
+				org.apache.pdfbox.text.PDFTextStripper stripper = new org.apache.pdfbox.text.PDFTextStripper();
+				stripper.setStartPage(i + 1);
+				stripper.setEndPage(i + 1);
+				String pageText = stripper.getText(pdDocument);
+
+				// Add the extracted text to the DOCX document
+				document.createParagraph().createRun().setText(pageText);
+			}
+
+			// Save the converted document to a byte array
+			ByteArrayOutputStream docxOutputStream = new ByteArrayOutputStream();
+			document.write(docxOutputStream);
+			document.close();
+			return docxOutputStream.toByteArray();
+		}
 	}
 
 	protected byte[] convertListOfBytesToZip(HashMap<String, byte[]> mapReporte) throws IOException {

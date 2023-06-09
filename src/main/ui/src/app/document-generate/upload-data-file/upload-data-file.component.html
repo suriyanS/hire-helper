@@ -10,7 +10,7 @@
             <div class="p-fluid">
                 <div class="p-field">
                     <label for="uploaddatafile">Upload data file</label>
-                    <p-fileUpload name="myfile[]" accept=".xls,.xlsx" customUpload="true" (uploadHandler)="onBasicUpload($event)"></p-fileUpload>
+                    <p-fileUpload [auto]="true" name="myfile[]" accept=".xls,.xlsx" customUpload="true" chooseLabel="Browse" (uploadHandler)="onBasicUpload($event)"></p-fileUpload>
                 </div><br />        
 
                 <ng-container *ngIf="showSheetList">

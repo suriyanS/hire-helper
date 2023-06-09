@@ -5,16 +5,17 @@
     <div class="flex-container" style="margin-left: 20px; width: 45%;float: left;">
         <div class="column" style="width: 30%; padding-top: 20px;">Title<span class="p-invalid">*</span></div>
         <div class="column" style="width: 70%;">
-            <input required #templateTitle [disabled]="editMode" [(ngModel)]="templateModel.title" id="templateTitle" name="templateTitle"
-                pInputText type="text" placeholder="Please enter the Title" style="width: 90%;" />
+            <input required #templateTitle [disabled]="editMode" [(ngModel)]="templateModel.title" id="templateTitle"
+                name="templateTitle" pInputText type="text" placeholder="Please enter the Title" style="width: 90%;" />
         </div>
     </div>
 
     <div class="flex-container" style="margin-left: 20px; width: 45%;float: left;">
         <div class="column" style="width: 30%; padding-top: 20px;">Description<span class="p-invalid">*</span> </div>
         <div class="column" style="width: 70%;">
-            <input [disabled]="editMode" [(ngModel)]="templateModel.description" id="templateDescription" name="templateDescription"
-                pInputText type="text" placeholder="Please enter the Description" style="width: 90%;" />
+            <input [disabled]="editMode" [(ngModel)]="templateModel.description" id="templateDescription"
+                name="templateDescription" pInputText type="text" placeholder="Please enter the Description"
+                style="width: 90%;" />
         </div>
     </div>
 
@@ -44,7 +45,8 @@
             <app-offer-template-editor [(content)]="templateModel.content" (contentChange)="onContentChange($event)">
             </app-offer-template-editor>
             <div>
-                <button pButton type="submit" label="Save" (click)="onSaveTemplate()"></button>
+                <button pButton type="submit" label="{{editMode ? 'Update': 'Save'}}"
+                    (click)="onSaveOrUpdateTemplate()"></button>
             </div>
         </div>
         <div class="column">

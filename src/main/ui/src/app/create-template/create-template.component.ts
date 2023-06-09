@@ -40,20 +40,33 @@ export class CreateTemplateComponent implements OnInit, AfterViewInit, OnDestroy
     this.templateTitle.nativeElement.focus()
   }
 
-  onSaveTemplate() {
+  onSaveOrUpdateTemplate() {
     let obj = this;
     if (!obj.templateModel || !obj.templateModel.title || !obj.templateModel.content) {
       return;
     }
-    this.templateService.saveTemplate(obj.templateModel).pipe(finalize(() => { })
+    if(this.editMode){
+      this.templateService.updateTemplate(obj.templateModel).pipe(finalize(() => { })
     ).subscribe((result: Template) => {
       this.templateModel = new Template();
-      this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Template Saved Successfully!', life: 3000 });
+      this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Template Updated Successfully!', life: 3000 });
     },
       err => {
         console.log(err);
       }
     );
+    }else{
+      this.templateService.createTemplate(obj.templateModel).pipe(finalize(() => { })
+      ).subscribe((result: Template) => {
+        this.templateModel = new Template();
+        this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Template Saved Successfully!', life: 3000 });
+      },
+        err => {
+          console.log(err);
+        }
+      );
+    }
+    
 
   }
 

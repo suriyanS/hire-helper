@@ -34,7 +34,7 @@ public class TemplateService {
 
 	public List<Template> getAllTemplateFields() {
 		return repository.findAll();
-	}	
+	}
 
 	public Template getTemplateByID(Long id) {
 		Optional<Template> template = repository.findById(id);
@@ -59,6 +59,19 @@ public class TemplateService {
 			templateObj.setErrorMessage("Template - " + template.getTitle() + " exists already!");
 		}
 		return templateObj;
+	}
+
+	public Template updateTemplate(Template template) {
+		Optional<Template> optionalTemplate = repository.findById(template.getId());
+		if (optionalTemplate.isPresent()) {
+			Template existingTemplate = optionalTemplate.get();
+			existingTemplate.setContent(template.getContent());// Update the desired field with the new value
+			repository.save(existingTemplate);
+		} else {
+			logger.info("Template - " + template.getTitle() + " not exists!");
+			template.setErrorMessage("Template - " + template.getTitle() + " not exists!");
+		}
+		return template;
 	}
 
 	public String createTemplate(List<Template> templates) {
@@ -96,7 +109,7 @@ public class TemplateService {
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 
 		PdfWriter writer = PdfWriter.getInstance(document, out);
-		document.open();	
+		document.open();
 		InputStream in = new ByteArrayInputStream(htmlString.getBytes());
 		XMLWorkerHelper.getInstance().parseXHtml(writer, document, in);
 		document.close();

@@ -31,6 +31,14 @@ export class TemplateService {
         });
     }
 
+    generateDocxZip(data): any {
+        return this.http.post('/templates/doc/zip', data, {
+            headers: new HttpHeaders({
+                'Content-Type': 'application/json',
+            }), responseType: 'blob'
+        });
+    }
+
     generatePDF(data): any {
         return this.http.post('/templates/pdf', data, {
             headers: new HttpHeaders({
@@ -39,8 +47,12 @@ export class TemplateService {
         });
     }
 
-    saveTemplate(template: Template): Observable<any> {
+    createTemplate(template: Template): Observable<any> {
         return this.http.post('/templates', template);
+    }
+
+    updateTemplate(template: Template): Observable<any> {
+        return this.http.put('/templates', template);
     }
 
     deleteTemplate(id: number): Observable<any> {

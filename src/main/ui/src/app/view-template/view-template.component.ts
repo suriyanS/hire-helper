@@ -97,17 +97,33 @@ export class ViewTemplateComponent implements OnInit, AfterViewInit {
       exportData.fileNamePrefix = this.fileOutputFormat.fileNamePrefix;
     });
 
-    this.generateDocument(this.generatedData);
+    if(this.fileOutputFormat.fileFormat=='docx'){
+      this.generateDocxDocument(this.generatedData);
+    }
+
+    if(this.fileOutputFormat.fileFormat=='pdf'){
+      this.generatePdfDocument(this.generatedData);
+    }
+   
 
   }
 
+  generateDocxDocument(exportData: Array<FileOutputFormat>) {
+    this.templateService.generateDocxZip(exportData).subscribe(
+      (response) => {
+        let blob = new Blob([response]);
+        exportData.length > 1
+        let filename = this.fileOutputFormat.fileName + ((exportData.length > 1) ? '.zip' : '.' + this.fileOutputFormat.fileFormat);
+        saveAs(blob, filename);
+      });
+  }
 
-
-  generateDocument(exportData: Array<FileOutputFormat>) {
+  generatePdfDocument(exportData: Array<FileOutputFormat>) {
     this.templateService.generatePDFZip(exportData).subscribe(
       (response) => {
         let blob = new Blob([response]);
-        let filename = this.fileOutputFormat.fileName + '.zip';
+        exportData.length > 1
+        let filename = this.fileOutputFormat.fileName + ((exportData.length > 1) ? '.zip' : '.' + this.fileOutputFormat.fileFormat);
         saveAs(blob, filename);
       });
   }

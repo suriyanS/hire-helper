@@ -33,7 +33,7 @@ export class DocumentGenerationComponent implements OnInit {
   ngOnInit() {
     this.fileformats = [
       { name: 'PDF', code: 'pdf', factor: 1 },
-      // { name: 'DOCX', code: 'docx', factor: 2 }
+      { name: 'DOCX', code: 'docx', factor: 2 }
     ];
 
     this.fields = [
