@@ -72,6 +72,7 @@ export class ViewTemplateComponent implements OnInit, AfterViewInit {
   }
 
   enableGenerate(template: Template) {
+    this.currentScreen = 'upload';
     this.showDocGeneration = true;
     this.previewTemplate = template;
   }
@@ -97,14 +98,14 @@ export class ViewTemplateComponent implements OnInit, AfterViewInit {
       exportData.fileNamePrefix = this.fileOutputFormat.fileNamePrefix;
     });
 
-    if(this.fileOutputFormat.fileFormat=='docx'){
+    if (this.fileOutputFormat.fileFormat == 'docx') {
       this.generateDocxDocument(this.generatedData);
     }
 
-    if(this.fileOutputFormat.fileFormat=='pdf'){
+    if (this.fileOutputFormat.fileFormat == 'pdf') {
       this.generatePdfDocument(this.generatedData);
     }
-   
+
 
   }
 

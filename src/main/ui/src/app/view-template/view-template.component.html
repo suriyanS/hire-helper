@@ -30,8 +30,8 @@
 </p-dialog>
 <p-dialog header="Document Generation" [(visible)]="showDocGeneration" [modal]="true" [style]="{width: '70vw'}"
     [baseZIndex]="10000" [draggable]="false" [resizable]="true"> 
-    <app-upload-data-file [hidden]="currentScreen=='document'" [(templateModel)]="previewTemplate" (excelColumnHeaders)="onExcelHeaderGenerated($event)" (generatedData)="onDataGenerated($event)" (uploadFileBtnClick)="onNxtClick()"></app-upload-data-file>
-    <app-document-generation [hidden]="currentScreen=='upload'" [excelHeaders]="excelHeaders" (fileOutputFormatChange)="onFileOutputFormatChange($event)" (backBtnClick)="onBackClick()" (generateBtnClick)="onGenerateTemplate()"></app-document-generation>   
+    <app-upload-data-file *ngIf="showDocGeneration" [hidden]="currentScreen=='document'" [(templateModel)]="previewTemplate" (excelColumnHeaders)="onExcelHeaderGenerated($event)" (generatedData)="onDataGenerated($event)" (uploadFileBtnClick)="onNxtClick()"></app-upload-data-file>
+    <app-document-generation *ngIf="showDocGeneration" [hidden]="currentScreen=='upload'" [excelHeaders]="excelHeaders" (fileOutputFormatChange)="onFileOutputFormatChange($event)" (backBtnClick)="onBackClick()" (generateBtnClick)="onGenerateTemplate()"></app-document-generation>   
   </p-dialog>
 
 <p-confirmDialog [style]="{width: '450px'}"></p-confirmDialog>

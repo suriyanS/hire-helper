@@ -23,7 +23,7 @@ export class UploadDataFileComponent implements OnInit {
   disableNext = true;
   submitted: boolean = false;
   @Input()
-  templateModel: Template;
+  templateModel: Template = new Template();
 
   @Output()
   uploadFileBtnClick: EventEmitter<Boolean> = new EventEmitter();
