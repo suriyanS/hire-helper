@@ -1,0 +1,50 @@
+<div class="stepsdemo-content" style="min-height: 450px">
+  <p-card>
+    <ng-template pTemplate="title">
+      Step 1. Fill values for dynamic fields
+    </ng-template>
+    <ng-template pTemplate="subtitle"> All fields are Mandatory </ng-template>
+    <ng-template pTemplate="content">
+      <div class="p-fluid">
+        <div class="p-field">
+          <form
+            [formGroup]="dynamicUserInputForm"
+            (ngSubmit)="nextPage()"
+            *ngIf="templateModel.fields?.length > 0"
+          >
+            <div *ngFor="let field of templateModel.fields">
+              <label [for]="field.fieldName">{{ field.fieldName }}</label>
+              <input
+                type="text"
+                pInputText
+                [id]="field.fieldName"
+                [formControlName]="field.fieldName"
+              />
+              <div
+                *ngIf="
+                  dynamicUserInputForm.get(field.fieldName)?.invalid &&
+                  dynamicUserInputForm.get(field.fieldName)?.touched
+                "
+                class="error-message"
+              >
+                {{ field.fieldName }} is required.
+              </div>
+            </div>
+          </form>
+        </div>
+        <br />
+      </div>
+    </ng-template>
+    <ng-template pTemplate="footer">
+      <div class="p-grid p-nogutter p-justify-end">
+        <p-button
+          label="Next"
+          [disabled]="dynamicUserInputForm.invalid"
+          (onClick)="nextPage()"
+          icon="pi pi-angle-right"
+          iconPos="right"
+        ></p-button>
+      </div>
+    </ng-template>
+  </p-card>
+</div>

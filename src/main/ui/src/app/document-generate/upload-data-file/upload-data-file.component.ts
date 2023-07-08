@@ -1,15 +1,19 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { DropDownModel, FileOutputFormat, OfferLetterField } from 'src/app/model/dropdown.model';
-import * as XLSX from 'xlsx'
-import { Template } from 'src/app/model/Template';
+import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
+import {
+  DropDownModel,
+  FileOutputFormat,
+  OfferLetterField,
+} from "src/app/model/dropdown.model";
+import * as XLSX from "xlsx";
+import { Template } from "src/app/model/Template";
+import { SharedService } from "src/app/shared.service";
 
 @Component({
-  selector: 'app-upload-data-file',
-  templateUrl: './upload-data-file.component.html',
-  styleUrls: ['./upload-data-file.component.scss']
+  selector: "app-upload-data-file",
+  templateUrl: "./upload-data-file.component.html",
+  styleUrls: ["./upload-data-file.component.scss"],
 })
 export class UploadDataFileComponent implements OnInit {
-
   fileToUpload: File = null;
   workSheetNames: Array<DropDownModel> = new Array<DropDownModel>();
   showSheetList: boolean = false;
@@ -34,14 +38,13 @@ export class UploadDataFileComponent implements OnInit {
   @Output()
   excelColumnHeaders: EventEmitter<Array<DropDownModel>> = new EventEmitter();
 
-  constructor() { }  
+  constructor(private sharedService: SharedService) {}
 
   ngOnInit() {
-
     this.classes = [
-      { name: 'First Class', code: 'A', factor: 1 },
-      { name: 'Second Class', code: 'B', factor: 2 },
-      { name: 'Third Class', code: 'C', factor: 3 }
+      { name: "First Class", code: "A", factor: 1 },
+      { name: "Second Class", code: "B", factor: 2 },
+      { name: "Third Class", code: "C", factor: 3 },
     ];
   }
 
@@ -77,17 +80,17 @@ export class UploadDataFileComponent implements OnInit {
 
   get_header_row(sheet) {
     let headers = [];
-    let range = XLSX.utils.decode_range(sheet['!ref']);
-    let C, R = range.s.r;
+    let range = XLSX.utils.decode_range(sheet["!ref"]);
+    let C,
+      R = range.s.r;
     /* start in the first row * /
    /* walk every column in the range */
     for (C = range.s.c; C <= range.e.c; ++C) {
-      let cell = sheet[XLSX.utils.encode_cell({ c: C, r: R })]
+      let cell = sheet[XLSX.utils.encode_cell({ c: C, r: R })];
 
       /* find the cell in the first row */
-      let hdr = "UNKNOWN " + C; // <-- replace with your desired default 
-      if (cell && cell.t)
-        hdr = XLSX.utils.format_cell(cell);
+      let hdr = "UNKNOWN " + C; // <-- replace with your desired default
+      if (cell && cell.t) hdr = XLSX.utils.format_cell(cell);
 
       headers.push(hdr);
     }
@@ -95,34 +98,13 @@ export class UploadDataFileComponent implements OnInit {
   }
 
   generateTemplate() {
-    let template = this.templateModel.content;
-    let exportData = [];
-    let dataToExport = new Array<FileOutputFormat>();
-    let fileNo = 0;
-
-    this.excelJsonData.forEach(element => {
-      let fileOutputData = new FileOutputFormat();
-      fileOutputData.fileFieldMap = new Array<OfferLetterField>();
-      fileNo = fileNo + 1;
-      fileOutputData.fileNo = fileNo;
-      let duplicateTemplate = template;
-      this.templateModel.fields.forEach(f => {
-        let field = new OfferLetterField();
-        field.fieldName = f.fieldName;
-        let find = "{" + f.fieldName + "}";
-        let replaceValue = element[f.fieldName];
-        field.fieldValue = replaceValue ? replaceValue : '';
-        fileOutputData.fileFieldMap.push(field);
-        duplicateTemplate = this.replaceAll(duplicateTemplate, find, replaceValue);
-
-      });
-      fileOutputData.fileData = duplicateTemplate;
-      exportData.push(duplicateTemplate);
-      dataToExport.push(fileOutputData);
-    });
+    const dataToExport = this.sharedService.generateTemplateUsingExcelData(
+      this.templateModel,
+      this.excelJsonData
+    );
     this.generatedData.emit(dataToExport);
-    this.disableNext = false;    
-  }  
+    this.disableNext = false;
+  }
 
   onFieldValueChange(field: OfferLetterField, fieldMap: DropDownModel) {
     if (fieldMap) {
@@ -131,17 +113,17 @@ export class UploadDataFileComponent implements OnInit {
   }
 
   replaceAll(str: string, find: string, replace: string) {
-    return str.replace(new RegExp(find, 'g'), replace);
+    return str.replace(new RegExp(find, "g"), replace);
   }
 
   readExcelFile(fileToUpload: File) {
-    let workBook = null;   
+    let workBook = null;
     const reader = new FileReader();
     const file = fileToUpload;
     let obj = this;
     reader.onload = (event) => {
       const data = reader.result;
-      workBook = XLSX.read(data, { type: 'binary' });
+      workBook = XLSX.read(data, { type: "binary" });
       obj.workSheetNames = [];
       workBook.SheetNames.forEach((name, index) => {
         let workSheet = new DropDownModel();
@@ -149,12 +131,9 @@ export class UploadDataFileComponent implements OnInit {
         workSheet.name = name;
         obj.workSheetNames.push(workSheet);
       });
-      obj.showSheetList = workBook.SheetNames.length > 0 ? true : false;      
+      obj.showSheetList = workBook.SheetNames.length > 0 ? true : false;
       obj.workBook = workBook;
-
-
-    }
+    };
     reader.readAsBinaryString(file);
   }
-
 }

@@ -13,16 +13,18 @@ import { DropdownModule } from 'primeng/dropdown';
 import { InputTextModule } from 'primeng/inputtext';
 import { InputMaskModule } from 'primeng/inputmask';
 import { CheckboxModule } from 'primeng/checkbox';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DocumentGenerationComponent } from './document-generation/document-generation.component';
 import { FileUploadModule } from 'primeng/fileupload';
+import { UserInputComponent } from './user-input/user-input.component';
 
 @NgModule({
   declarations: [
     DocumentGenerateComponent, 
     UploadDataFileComponent, 
     FieldMappingComponent, 
-    DocumentGenerationComponent
+    DocumentGenerationComponent,
+    UserInputComponent
   ],
   imports: [
     CommonModule,
@@ -36,12 +38,13 @@ import { FileUploadModule } from 'primeng/fileupload';
 		InputMaskModule,
 		CheckboxModule,
     FormsModule,
+    ReactiveFormsModule,
     FileUploadModule
   ],
   exports:[ DocumentGenerateComponent, 
     UploadDataFileComponent, 
     FieldMappingComponent, 
-    DocumentGenerationComponent],
+    DocumentGenerationComponent, UserInputComponent],
   providers: [
     TicketService
   ]

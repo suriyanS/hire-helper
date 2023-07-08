@@ -26,7 +26,7 @@ export class DocumentGenerationComponent implements OnInit {
   generateBtnClick: EventEmitter<Boolean> = new EventEmitter();
 
   @Input()
-  excelHeaders: Array<DropDownModel> = new Array<DropDownModel>();
+  filePrefixOptions: Array<DropDownModel> = new Array<DropDownModel>();
 
   constructor(public ticketService: TicketService, private router: Router, private templateService: TemplateService) { }
 
@@ -43,8 +43,6 @@ export class DocumentGenerationComponent implements OnInit {
 
     
   }
-
-
 
   onSelectedFormatChange(){
     this.fileOutputFormat.fileFormat = this.selectedFileFormat.code;

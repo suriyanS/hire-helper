@@ -14,7 +14,7 @@ export class FileOutputFormat {
 }
 
 
-export class OfferLetterField{
+export class OfferLetterField {
     id: number;
     fieldName: string;
     fieldCode: string;

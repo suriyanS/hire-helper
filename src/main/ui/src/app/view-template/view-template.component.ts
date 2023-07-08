@@ -1,40 +1,46 @@
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
-import { DomSanitizer } from '@angular/platform-browser';
-import { ConfirmationService, MessageService } from 'primeng/api';
-import { finalize } from 'rxjs/operators';
-import { TemplateService } from '../create-template/create-template-service';
-import { DropDownModel, FileOutputFormat } from '../model/dropdown.model';
-import { Template } from '../model/Template';
-import { saveAs } from 'file-saver';
-import { Router } from '@angular/router';
-import { SharedService } from '../shared.service';
+import { AfterViewInit, Component, OnInit, ViewChild } from "@angular/core";
+import { DomSanitizer } from "@angular/platform-browser";
+import { ConfirmationService, MessageService } from "primeng/api";
+import { finalize } from "rxjs/operators";
+import { TemplateService } from "../create-template/create-template-service";
+import { DropDownModel, FileOutputFormat } from "../model/dropdown.model";
+import { Template } from "../model/Template";
+import { saveAs } from "file-saver";
+import { Router } from "@angular/router";
+import { SharedService } from "../shared.service";
 
 @Component({
-  selector: 'app-view-template',
-  templateUrl: './view-template.component.html',
-  styleUrls: ['./view-template.component.scss'],
+  selector: "app-view-template",
+  templateUrl: "./view-template.component.html",
+  styleUrls: ["./view-template.component.scss"],
 })
 export class ViewTemplateComponent implements OnInit, AfterViewInit {
-  @ViewChild('pdfViewer') public pdfViewer;
+  @ViewChild("pdfViewer") public pdfViewer;
   templateList: Array<Template> = new Array<Template>();
 
-  constructor(public templateService: TemplateService, private sanitizer: DomSanitizer,
-    private confirmationService: ConfirmationService, private messageService: MessageService,
-    private router: Router, private sharedService: SharedService) { }
+  constructor(
+    public templateService: TemplateService,
+    private sanitizer: DomSanitizer,
+    private confirmationService: ConfirmationService,
+    private messageService: MessageService,
+    private router: Router,
+    private sharedService: SharedService
+  ) {}
   showPreview = false;
   showDocGeneration = false;
+  showConfirmDialog = false;
+  showDynamicUserInputForm = false;
   showPreDocGeneration = false;
   hideDocGeneration = false;
-  currentScreen = "upload"
+  currentScreen = "upload";
   previewTemplate: Template = new Template();
   fileOutputFormat: FileOutputFormat = new FileOutputFormat();
   generatedData: Array<FileOutputFormat> = new Array<FileOutputFormat>();
-  excelHeaders: Array<DropDownModel> = new Array<DropDownModel>();
+  filePrefixOptions: Array<DropDownModel> = new Array<DropDownModel>();
   expectedFileName: string;
   pdfPreview: any;
-  ngOnInit() {
-
-  }
+  dialogHeader: string;
+  ngOnInit() {}
 
   ngAfterViewInit() {
     this.getAllTemplates();
@@ -42,15 +48,17 @@ export class ViewTemplateComponent implements OnInit, AfterViewInit {
 
   getAllTemplates() {
     let obj = this;
-    this.templateService.getAllTemplates().pipe(finalize(() => { })
-    ).subscribe(result => {
-      obj.templateList = result;
-
-    },
-      err => {
-        console.log(err);
-      }
-    )
+    this.templateService
+      .getAllTemplates()
+      .pipe(finalize(() => {}))
+      .subscribe(
+        (result) => {
+          obj.templateList = result;
+        },
+        (err) => {
+          console.log(err);
+        }
+      );
   }
 
   onDataGenerated(data) {
@@ -58,7 +66,7 @@ export class ViewTemplateComponent implements OnInit, AfterViewInit {
   }
 
   onExcelHeaderGenerated(data) {
-    this.excelHeaders = data;
+    this.filePrefixOptions = data;
   }
 
   enablePreview(template: Template) {
@@ -68,93 +76,141 @@ export class ViewTemplateComponent implements OnInit, AfterViewInit {
 
   editDocument(template: Template) {
     this.sharedService.setSharedData(template);
-    this.router.navigateByUrl('/edit-template');
+    this.router.navigateByUrl("/edit-template");
   }
 
   enableGenerate(template: Template) {
-    this.currentScreen = 'upload';
-    this.showDocGeneration = true;
+    this.currentScreen = "upload";
+    this.showConfirmDialog = true;
     this.previewTemplate = template;
   }
 
   onNxtClick() {
-    this.currentScreen = 'document';
+    this.currentScreen = "document";
   }
 
   onBackClick() {
-    this.currentScreen = 'upload';
+    if (this.showDynamicUserInputForm) {
+      this.currentScreen = "input";
+    } else {
+      this.currentScreen = "upload";
+    }
   }
 
   onFileOutputFormatChange(fileOutputFormat: FileOutputFormat) {
     this.fileOutputFormat = fileOutputFormat;
   }
 
-  onGenerateTemplate() {
-    this.generatedData.forEach(exportData => {
-      let prefixData = exportData.fileFieldMap.filter(f => f.fieldName === this.fileOutputFormat.fileNamePrefix);
-      let prefixValue = prefixData && prefixData[0] && prefixData[0].fieldValue ? prefixData[0].fieldValue : exportData.fileNo;
-      exportData.uniqueFileName = prefixValue + this.fileOutputFormat.fileName + '.' + this.fileOutputFormat.fileFormat;
+  doTemplateGeneration() {
+    this.generatedData.forEach((exportData) => {
+      let prefixData = exportData.fileFieldMap.filter(
+        (f) => f.fieldName === this.fileOutputFormat.fileNamePrefix
+      );
+      let prefixValue =
+        prefixData && prefixData[0] && prefixData[0].fieldValue
+          ? prefixData[0].fieldValue
+          : exportData.fileNo;
+      exportData.uniqueFileName =
+        prefixValue +
+        this.fileOutputFormat.fileName +
+        "." +
+        this.fileOutputFormat.fileFormat;
       exportData.fileFormat = this.fileOutputFormat.fileFormat;
       exportData.fileNamePrefix = this.fileOutputFormat.fileNamePrefix;
     });
 
-    if (this.fileOutputFormat.fileFormat == 'docx') {
+    if (this.fileOutputFormat.fileFormat == "docx") {
       this.generateDocxDocument(this.generatedData);
     }
 
-    if (this.fileOutputFormat.fileFormat == 'pdf') {
+    if (this.fileOutputFormat.fileFormat == "pdf") {
       this.generatePdfDocument(this.generatedData);
     }
-
-
   }
 
   generateDocxDocument(exportData: Array<FileOutputFormat>) {
-    this.templateService.generateDocxZip(exportData).subscribe(
-      (response) => {
-        let blob = new Blob([response]);
-        exportData.length > 1
-        let filename = this.fileOutputFormat.fileName + ((exportData.length > 1) ? '.zip' : '.' + this.fileOutputFormat.fileFormat);
-        saveAs(blob, filename);
-      });
+    this.templateService.generateDocxZip(exportData).subscribe((response) => {
+      let blob = new Blob([response]);
+      exportData.length > 1;
+      let filename =
+        this.fileOutputFormat.fileName +
+        (exportData.length > 1
+          ? ".zip"
+          : "." + this.fileOutputFormat.fileFormat);
+      saveAs(blob, filename);
+    });
   }
 
   generatePdfDocument(exportData: Array<FileOutputFormat>) {
-    this.templateService.generatePDFZip(exportData).subscribe(
-      (response) => {
-        let blob = new Blob([response]);
-        exportData.length > 1
-        let filename = this.fileOutputFormat.fileName + ((exportData.length > 1) ? '.zip' : '.' + this.fileOutputFormat.fileFormat);
-        saveAs(blob, filename);
-      });
+    this.templateService.generatePDFZip(exportData).subscribe((response) => {
+      let blob = new Blob([response]);
+      exportData.length > 1;
+      let filename =
+        this.fileOutputFormat.fileName +
+        (exportData.length > 1
+          ? ".zip"
+          : "." + this.fileOutputFormat.fileFormat);
+      saveAs(blob, filename);
+    });
   }
 
   generatePreviewDocument(html: string) {
-    this.templateService.generatePDF(html).subscribe(
-      (response) => {
-        this.pdfViewer.pdfSrc = response;
-        this.pdfViewer.refresh();
-        this.showPreview = true;
-      });
+    this.templateService.generatePDF(html).subscribe((response) => {
+      this.pdfViewer.pdfSrc = response;
+      this.pdfViewer.refresh();
+      this.showPreview = true;
+    });
   }
 
   deleteTemplate(template: Template) {
     this.confirmationService.confirm({
-      message: 'Are you sure you want to delete the selected Template - ' + template.title + '?',
-      header: 'Confirm',
-      icon: 'pi pi-exclamation-triangle',
+      message:
+        "Are you sure you want to delete the selected Template - " +
+        template.title +
+        "?",
+      header: "Confirm",
+      icon: "pi pi-exclamation-triangle",
       accept: () => {
-        this.templateService.deleteTemplate(template.id).subscribe(status => {
+        this.templateService.deleteTemplate(template.id).subscribe((status) => {
           if (status == template.id) {
             this.getAllTemplates();
-            this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Template Deleted', life: 3000 });
+            this.messageService.add({
+              severity: "success",
+              summary: "Successful",
+              detail: "Template Deleted",
+              life: 3000,
+            });
           } else {
-            this.messageService.add({ severity: 'warn', summary: 'Failed', detail: 'Error occured while Template delete', life: 3000 });
+            this.messageService.add({
+              severity: "warn",
+              summary: "Failed",
+              detail: "Error occured while Template delete",
+              life: 3000,
+            });
           }
         });
-
-      }
+      },
     });
   }
 
+  loadDataFromExcel() {
+    this.showConfirmDialog = false;
+    this.showDynamicUserInputForm = false;
+    this.setDialogHeader();
+    this.showDocGeneration = true;
+  }
+
+  directInputSubmit() {
+    this.currentScreen = 'input';
+    this.showConfirmDialog = false;
+    this.showDynamicUserInputForm = true;
+    this.setDialogHeader();
+    this.showDocGeneration = true;
+  }
+
+  setDialogHeader() {
+    this.dialogHeader = this.showDynamicUserInputForm
+      ? "Document Generation - Direct Input & Submit"
+      : "Document Generation - Load Data from Excel";
+  }
 }

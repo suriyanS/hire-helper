@@ -28,10 +28,16 @@
         <p-button icon="pi pi-check" (click)="showPreview=false" label="Ok" styleClass="p-button-text"></p-button>
     </ng-template>
 </p-dialog>
-<p-dialog header="Document Generation" [(visible)]="showDocGeneration" [modal]="true" [style]="{width: '70vw'}"
+<p-dialog [header]="dialogHeader" [(visible)]="showDocGeneration" [modal]="true" [style]="{width: '70vw'}"
     [baseZIndex]="10000" [draggable]="false" [resizable]="true"> 
-    <app-upload-data-file *ngIf="showDocGeneration" [hidden]="currentScreen=='document'" [(templateModel)]="previewTemplate" (excelColumnHeaders)="onExcelHeaderGenerated($event)" (generatedData)="onDataGenerated($event)" (uploadFileBtnClick)="onNxtClick()"></app-upload-data-file>
-    <app-document-generation *ngIf="showDocGeneration" [hidden]="currentScreen=='upload'" [excelHeaders]="excelHeaders" (fileOutputFormatChange)="onFileOutputFormatChange($event)" (backBtnClick)="onBackClick()" (generateBtnClick)="onGenerateTemplate()"></app-document-generation>   
+    <app-upload-data-file *ngIf="showDocGeneration" [hidden]="currentScreen!='upload'" [(templateModel)]="previewTemplate" (excelColumnHeaders)="onExcelHeaderGenerated($event)" (generatedData)="onDataGenerated($event)" (uploadFileBtnClick)="onNxtClick()"></app-upload-data-file>
+    <app-document-generation *ngIf="showDocGeneration" [hidden]="currentScreen!='document'" [filePrefixOptions]="filePrefixOptions" (fileOutputFormatChange)="onFileOutputFormatChange($event)" (backBtnClick)="onBackClick()" (generateBtnClick)="doTemplateGeneration()"></app-document-generation>
+    <app-user-input *ngIf="showDocGeneration" [hidden]="currentScreen!='input'" [templateModel]="previewTemplate" (generatedData)="onDataGenerated($event)" (nextBtnClick)="onNxtClick()"></app-user-input>   
+  </p-dialog>
+  <p-dialog header="Document Generation" [(visible)]="showConfirmDialog">
+    <p>How do you want to proceed document generation?</p>
+    <p-button label="Load Data from Excel" (click)="loadDataFromExcel()" styleClass="p-button-secondary" [style]="{'margin-left': '.5em'}"></p-button>
+    <p-button label="Direct Input & Submit" (click)="directInputSubmit()" styleClass="p-button-success" [style]="{'margin-left': '.5em'}"></p-button>
   </p-dialog>
 
 <p-confirmDialog [style]="{width: '450px'}"></p-confirmDialog>

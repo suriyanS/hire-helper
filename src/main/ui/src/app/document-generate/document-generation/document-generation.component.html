@@ -19,9 +19,9 @@
                     <input id="filename" [(ngModel)]="fileOutputFormat.fileName" type="text" pInputText placeholder="Enter the name of the generated file"/> 
                 </div><br/>
 
-                <div class="p-field p-col-12 p-md-6">
+                <div class="p-field p-col-12 p-md-6" *ngIf="filePrefixOptions && filePrefixOptions.length > 0">
                     <label for="filenameprefix">File name prefix</label>
-                    <p-dropdown inputId="filenameprefix" d="filenameprefixId" name="filenameprefixId" [(ngModel)]="selectedFilePrefix" (ngModelChange)="onSelectedPrefixChange()" [options]="excelHeaders" optionLabel="name" placeholder="Select the prefix for the generated each file"></p-dropdown>
+                    <p-dropdown inputId="filenameprefix" d="filenameprefixId" name="filenameprefixId" [(ngModel)]="selectedFilePrefix" (ngModelChange)="onSelectedPrefixChange()" [options]="filePrefixOptions" optionLabel="name" placeholder="Select the prefix for the generated each file"></p-dropdown>
                 </div><br/>               
             </div>
         </ng-template>
